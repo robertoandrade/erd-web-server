@@ -49,6 +49,7 @@ $(function() {
   var loadSample = function() {
     var sampleURL = new URL(this.href || document.location).hash.substring(1);
 
+    $status.html('Loading...');
     console.log("Loading sample:", sampleURL);
 
     $erdText.load(sampleURL, function() {
