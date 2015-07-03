@@ -46,10 +46,17 @@ RUN mkdir $SRC/generated $SRC/log && \
 	touch $SRC/log/access.log $SRC/log/error.log && \
 	chown -R app:app generated log
 
+RUN cp /usr/bin/dot /app/heroku
+
 ONBUILD COPY src $SRC/src
 ONBUILD RUN cabal install
 ONBUILD RUN rm -Rf /app/.cabal /app/.ghc
 
 ONBUILD COPY assets $SRC/assets
 ONBUILD COPY templates $SRC/templates
+
+ONBUILD WORKDIR $SRC
+ONBUILD RUN echo "export PATH=\"/app/heroku:\$PATH\"" >> /app/.profile.d/path.sh
+ONBUILD RUN echo "cd $SRC" >> /app/.profile.d/workdir.sh
+
 ONBUILD EXPOSE $PORT
