@@ -1,11 +1,9 @@
 html {
-	background-color: #444;
-	color: white;
+    font-family: Helvetica Neue, Arial, sans-serif;
 }
 
 .header {
 	border-bottom: 2px white solid;
-	font-family : Verdana, Geneva, sans-serif;
 }
 
 h1 {
@@ -15,7 +13,6 @@ h1 {
 h2 {
     display: inline-block;
     margin-left: 20px;
-    font-style: italic;
     color: #ddd;
 }
 
@@ -23,30 +20,33 @@ h2 {
     margin: 10px;
 }
 
-#myTextarea {
+form, pre {
+    margin: 0px;
+    font-family: Consolas, "Lucida Console", Monaco, monospace;
+    font-size: 10pt;
+}
+
+#erdText {
     margin-top: 10px;
     min-width: 400px;
     height: 100%;
     min-height: 500px;
 }
 
-a {
+a#generateLink {
+    float: left;
     padding: 8px;
-    border-radius: 12px;
-    border: 2px solid #8AC007;
-    background-color: #8AA010;
+    margin: 10px;
+    background-color: #808080;
     text-decoration: none;
-    color: brown;
-    box-shadow: 2px 2px 3px #888888;
-    clear: both;
+    font-size: 10pt;
+    color: #ffffff;
     display: block;
-    margin: auto;
     width: 200px;
-    margin-top: 30px;
     text-align: center;
 }
 
-a:hover {
+a#generateLink:hover {
     box-shadow: 1px 1px 1px #888888;
 }
 
@@ -57,21 +57,39 @@ img {
 }
 
 .editorArea {
-    display: inline-block;
-    /*float: left;*/
+    display: block;
+    border: 1px solid silver;
+    float: left;
     width: 48%;
+    margin-bottom: 30px;
 }
 
 .diagramArea {
-    /*float : right;*/
+    display: block;
+    float : right;
     width: 48%;
-    display: inline-block;
+    margin-bottom: 30px;
 }
 
 #status {
     display: block;
-    margin-top: 30px;
+    float: right;
+    border: 1px solid #A0A0A0;
+    background-color: #E0E0E0;
+    padding: 10px;
     text-align: center;
     font-size: 18px;
-    font-style: italic;
+}
+.editorArea .footer {
+    border-top: 1px solid silver;
+}
+.footer {
+    clear: both;
+    font-size: 8pt;
+    color: silver;
+    text-align: right;
+    padding-right: 10px;
+}
+.footer a {
+    color: gray;
 }
