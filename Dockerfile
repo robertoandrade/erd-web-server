@@ -1,29 +1,55 @@
-FROM haskell:7.8
+FROM heroku/cedar:14
 MAINTAINER Roberto Andrade <me@robertoandrade.com>
 
-ENV APP_DIR /app/
-ENV BUILD_DIR $APP_DIR/dist/build/erd-web-server
-ENV APP_PORT 8000
+# Haskell install
 
-# Installing Prerequisites 
-RUN apt-get update && \
-	apt-get install -y graphviz && \
-	apt-get clean && \
-	cabal update
+ENV GHCVER 7.8.4
+ENV CABALVER 1.22
 
-# Building web app
-WORKDIR $APP_DIR
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+  	software-properties-common \
+  	graphviz \
+  && add-apt-repository -y ppa:hvr/ghc \
+  && apt-get update \
+  && apt-get install -y --no-install-recommends \
+    cabal-install-$CABALVER \
+    ghc-$GHCVER \
+  && rm -rf /var/lib/apt/lists/*
 
-COPY erd-web-server.cabal $APP_DIR
+ENV PATH /opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
+
+# Heroku settings
+
+RUN useradd -d /app -m app
+USER app
+WORKDIR /app
+
+ENV HOME /app
+ENV PORT 3000
+
+RUN mkdir -p /app/heroku
+RUN mkdir -p /app/src
+RUN mkdir -p /app/.profile.d
+
+WORKDIR /app/src
+
+# App build
+
+RUN cabal update
+
+ENV SRC $HOME/src
+COPY erd-web-server.cabal $SRC/
 RUN cabal install --only-dependencies
 
-COPY src $APP_DIR/src
-RUN cabal install
+RUN mkdir $SRC/generated $SRC/log && \
+	touch $SRC/log/access.log $SRC/log/error.log && \
+	chown -R app:app generated log
 
-# Copying web artifacts required at runtime only
-COPY . $APP_DIR
+ONBUILD COPY src $SRC/src
+ONBUILD RUN cabal install
+ONBUILD RUN rm -Rf /app/.cabal /app/.ghc
 
-# Starting
-EXPOSE $APP_PORT
-
-CMD "$BUILD_DIR/erd-web-server"
+ONBUILD COPY assets $SRC/assets
+ONBUILD COPY templates $SRC/templates
+ONBUILD EXPOSE $PORT
