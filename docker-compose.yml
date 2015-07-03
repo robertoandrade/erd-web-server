@@ -1,0 +1,7 @@
+app:
+  build: .
+  volumes:
+    - assets/:/app/assets
+    - templates/:/app/templates
+  ports:
+    - 8000:8000
