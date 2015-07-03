@@ -12,14 +12,18 @@ RUN apt-get update && \
 	cabal update
 
 # Building web app
-COPY erd-web-server.cabal 	$APP_DIR
-COPY src 					$APP_DIR/src
 WORKDIR $APP_DIR
+
+COPY erd-web-server.cabal $APP_DIR
+RUN cabal install --only-dependencies
+
+COPY src $APP_DIR/src
 RUN cabal install
 
 # Copying web artifacts required at runtime only
-COPY . 	$APP_DIR
+COPY . $APP_DIR
 
+# Starting
 EXPOSE $APP_PORT
 
 CMD "$BUILD_DIR/erd-web-server"
